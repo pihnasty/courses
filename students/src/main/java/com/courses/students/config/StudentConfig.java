@@ -15,7 +15,7 @@ public class StudentConfig {
     @Bean
     CommandLineRunner init(StudentRepository studentRepository){
         return args -> {
-            studentRepository.save(new Student("admin@email.com","Admin","11", List.of(Role.STUDENT, Role.TEACHER, Role.ADMIN),true));
+            studentRepository.save(new Student("admin@example.com","Admin","11", List.of(Role.STUDENT, Role.TEACHER, Role.ADMIN),true));
             studentRepository.save(new Student("alice@example.com", "Alice Johnson", "passAlice123", List.of(Role.STUDENT), true));
             studentRepository.save(new Student("bob@example.com", "Bob Smith", "bobSecure456", List.of(Role.STUDENT), true));
             studentRepository.save(new Student("carol@example.com", "Carol White", "carolPwd789", List.of(Role.STUDENT), true));

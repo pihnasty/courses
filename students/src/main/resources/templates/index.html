@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css"
           href="webjars/bootstrap/5.2.3/css/bootstrap.min.css">
-    <title>Welcome - Users App</title>
+    <title>Welcome - Students App</title>
 </head>
 <body class="d-flex h-100 text-center">
 
@@ -12,11 +13,14 @@
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="mb-auto">
         <div>
-            <h3 class="float-md-start mb-0">Users</h3>
+            <h3 class="float-md-start mb-0">Students</h3>
         </div>
     </header>
 
     <main class="px-3">
+        <div th:if="${param.logout}" class="alert alert-success">
+            <p>You have been logged out successfully.</p>
+        </div>
         <h1>Students Rest Application</h1>
         <p class="lead">This is a simple Students app</p>
         <p class="lead">
@@ -25,8 +29,12 @@
     </main>
 
     <footer class="mt-auto text-black-50">
-        <p>Powered by Spring Boot 3</p>
+        <p>Student App</p>
     </footer>
 </div>
+<form th:action="@{/logout}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input type="submit" class="btn btn-danger" value="Sign Out"/>
+</form>
 </body>
 </html>
