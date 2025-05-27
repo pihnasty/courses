@@ -1,10 +1,11 @@
 package com.courses.students.security;
 
 import com.courses.students.model.Role;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,22 +15,33 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+@TestConfiguration
 public class StudentsSecurityConfig {
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    SecurityFilterChain filterChainTest(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                //.csrf(AbstractHttpConfigurer::disable) // Optional: disable CSRF for simplicity
+/**
+ * Exception description:
+ * Trying to match using RequestHeaderRequestMatcher [expectedHeaderName=X-Requested-With, expectedHeaderValue=XMLHttpRequest]
+ * No match found. Using default entry point org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint@2f78bd0c
+ *
+ * Solution:
+ *
+ * add .csrf(AbstractHttpConfigurer::disable)
+ *
+ * Spring Security enables CSRF (Cross-Site Request Forgery) protection by default for state-changing
+ * requests like POST, PUT, DELETE. When testing such endpoints with TestRestTemplate, CSRF tokens are
+ * not automatically included, unless you disable CSRF or explicitly handle it.
+ */
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        //.requestMatchers("/", "/error", "/webjars/**", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
-                        //.logoutSuccessUrl("/index.html")
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 )
-                //.httpBasic(Customizer.withDefaults())
+                .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
                 .requestCache(RequestCacheConfigurer::disable)
                 .build();
@@ -38,21 +50,11 @@ public class StudentsSecurityConfig {
     @Bean
     UserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
         UserDetails admin = User.builder()
-                .username("1")
-                .password(passwordEncoder.encode("11"))
+                .username("admin@example.com")
+                .password(passwordEncoder.encode("admin"))
                 .roles(Role.ADMIN.name(), Role.TEACHER.name(), Role.STUDENT.name())
                 .build();
-        UserDetails teacher = User.builder()
-                .username("test@example.com")
-                .password(passwordEncoder.encode("test"))
-                .roles(Role.TEACHER.name())
-                .build();
-        UserDetails student = User.builder()
-                .username("student@example.com")
-                .password(passwordEncoder.encode("student"))
-                .roles(Role.STUDENT.name())
-                .build();
-        return new InMemoryUserDetailsManager(admin, teacher, student);
+        return new InMemoryUserDetailsManager(admin);
     }
 
     @Bean

@@ -1,0 +1,3 @@
+Adding a new user using the curl command:
+curl -XPOST -s -H "Content-Type: application/json" -d {\"email\": \"new@example.com\", \"name\": \"New Student\", \"password\": \"newpassword\", \"roles\": [\"STUDENT\"], \"active\": true}" http://localhost:8080/students | jq .
+curl -u admin@example.com:admin -XGET -s  http://localhost:8080/students | jq .

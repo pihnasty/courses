@@ -26,6 +26,7 @@ public class StudentConfig {
             studentRepository.save(new Student("henry@example.com", "Henry Adams", "h3nrySafePass", List.of(Role.STUDENT), true));
             studentRepository.save(new Student("irene@example.com", "Irene Lewis", "iren3TopPwd", List.of(Role.STUDENT), true));
             studentRepository.save(new Student("jack@example.com", "Jack Walker", "jackPwd654", List.of(Role.STUDENT), true));
+            studentRepository.save(new Student("test@example.com", "Test", "test", List.of(Role.STUDENT, Role.ADMIN), true));
         };
     }
 
