@@ -41,6 +41,8 @@ public class StudentsHttpRequestTests {
 
     @Test
     public void studentEndPointPostNewStudentShouldReturnStudent() {
+        var initialStudents = getStudents();
+        var size = initialStudents.size();
         var newStudent = new Student(
                 TestConstants.NEW_TEST_EMAIL,
                 TestConstants.NEW_TEST_NAME,
@@ -54,24 +56,22 @@ public class StudentsHttpRequestTests {
         assertThat(response).isNotNull();
         assertThat(response.getEmail()).isEqualTo(newStudent.getEmail());
 
-        var users = this.restTemplate
-                .withBasicAuth(TestConstants.TEST_EMAIL, TestConstants.TEST_PASSWORD)
-                .getForObject(TestConstants.STUDENTS_ENDPOINT, Collection.class);
+        var students = getStudents();
 
-        assertThat(users.size()).isGreaterThanOrEqualTo(2);
+        assertThat(students.size()).isEqualTo(size + 1);
     }
 
     @Test
     public void studentEndPointDeleteStudentShouldReturnVoid() {
+        var initialStudents = getStudents();
+        var size = initialStudents.size();
+
         this.restTemplate
                 .withBasicAuth(TestConstants.ADMIN_EMAIL, TestConstants.ADMIN_PASSWORD)
                 .delete(TestConstants.STUDENTS_ENDPOINT + "/" + TestConstants.TEST_DELETING_EMAIL);
 
-        var students = this.restTemplate
-                .withBasicAuth(TestConstants.ADMIN_EMAIL, TestConstants.ADMIN_PASSWORD)
-                .getForObject(TestConstants.STUDENTS_ENDPOINT, Collection.class);
-
-        assertThat(students.size()).isLessThanOrEqualTo(2);
+        var students = getStudents();
+        assertThat(students.size()).isLessThanOrEqualTo(size-1);
     }
 
     @Test
@@ -82,5 +82,11 @@ public class StudentsHttpRequestTests {
 
         assertThat(student).isNotNull();
         assertThat(student.getEmail()).isEqualTo(TestConstants.TEST_EMAIL);
+    }
+
+    private Collection getStudents() {
+        return this.restTemplate
+                .withBasicAuth(TestConstants.ADMIN_EMAIL, TestConstants.ADMIN_PASSWORD)
+                .getForObject(TestConstants.STUDENTS_ENDPOINT, Collection.class);
     }
 }

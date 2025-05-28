@@ -38,8 +38,8 @@ public class StudentsSecurityConfig {
     @Bean
     UserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
         UserDetails admin = User.builder()
-                .username("1")
-                .password(passwordEncoder.encode("11"))
+                .username("admin@example.com")
+                .password(passwordEncoder.encode("admin"))
                 .roles(Role.ADMIN.name(), Role.TEACHER.name(), Role.STUDENT.name())
                 .build();
         UserDetails teacher = User.builder()
