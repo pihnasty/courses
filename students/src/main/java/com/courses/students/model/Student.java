@@ -1,7 +1,6 @@
 package com.courses.students.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -16,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity(name="STUDENT")
+@Table(name = "STUDENTS")
 public class Student {
     @Id
     @NotBlank(message = "Email can not be empty")
@@ -32,6 +32,10 @@ public class Student {
     private String password;
 
     @Singular("role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "student_roles", joinColumns = @JoinColumn(name = "email"))
+    @Column(name = "roles")
+    @Enumerated(EnumType.STRING)
     private List<Role> roles;
 
     private boolean active;

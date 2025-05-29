@@ -2,6 +2,7 @@ package com.courses.students.web;
 
 import com.courses.students.model.Student;
 import com.courses.students.repository.StudentRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class StudentsController {
 
     @GetMapping("/{email}")
     public ResponseEntity<Student> findStudentById(@PathVariable String email) {
-        return ResponseEntity.of(this.studentRepository.findById(email));
+        return ResponseEntity.of(this.studentRepository.findByEmail(email));
     }
 
     @RequestMapping(method = {RequestMethod.POST,RequestMethod.PUT})
@@ -41,13 +42,16 @@ public class StudentsController {
                 .path("/{email}")
                 .buildAndExpand(student.getEmail())
                 .toUri();
-        return ResponseEntity.created(location).body(student);
+        return ResponseEntity
+                .created(location)
+                .body(this.studentRepository.findByEmail(student.getEmail()).get());
     }
 
     @DeleteMapping("/{email}")
+    @Transactional
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@PathVariable String email){
-        this.studentRepository.deleteById(email);
+        this.studentRepository.deleteByEmail(email);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

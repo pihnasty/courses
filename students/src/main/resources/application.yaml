@@ -1,6 +1,5 @@
-# Logging
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
+spring:
+  profiles:
+#    active: memory
+    active: h2
+#    active: h2-test

@@ -7,6 +7,7 @@ public class TestConstants {
     static final String NEW_TEST_NAME = "newtest";
     static final String NEW_TEST_PASSWORD = "newtest";
     static final String TEST_EMAIL = "test@example.com";
+    static final String TEST_NAME = "Test";
     static final String TEST_PASSWORD = "test";
     static final String TEST_DELETING_EMAIL = "test_deleting@example.com";
     static final String STUDENTS_ENDPOINT = "/students";

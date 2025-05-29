@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +22,7 @@ public class StudentsSecurityConfig {
         return httpSecurity
                 //.csrf(AbstractHttpConfigurer::disable) // Optional: disable CSRF for simplicity
                 .authorizeHttpRequests(auth -> auth
-                        //.requestMatchers("/", "/error", "/webjars/**", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/", "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
@@ -31,6 +32,12 @@ public class StudentsSecurityConfig {
                 )
                 //.httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/h2-console/**")
+                )
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
+                )
                 .requestCache(RequestCacheConfigurer::disable)
                 .build();
     }

@@ -6,6 +6,7 @@ import com.courses.students.repository.StudentRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class StudentConfig {
 
     @Bean
+    @Profile("memory")  // Activate this with --spring.profiles.active=memory
     CommandLineRunner init(StudentRepository studentRepository){
         return args -> {
             studentRepository.save(new Student("admin@example.com","Admin","admin", List.of(Role.STUDENT, Role.TEACHER, Role.ADMIN),true));
@@ -21,13 +23,8 @@ public class StudentConfig {
             studentRepository.save(new Student("carol@example.com", "Carol White", "carolPwd789", List.of(Role.STUDENT), true));
             studentRepository.save(new Student("david@example.com", "David Brown", "dav!dPwd321", List.of(Role.STUDENT), true));
             studentRepository.save(new Student("eva@example.com", "Eva Green", "evaSecret987", List.of(Role.STUDENT), true));
-            studentRepository.save(new Student("frank@example.com", "Frank Harris", "fr4nkStrongPwd", List.of(Role.STUDENT), true));
-            studentRepository.save(new Student("grace@example.com", "Grace Lee", "gracePwd432", List.of(Role.STUDENT), true));
-            studentRepository.save(new Student("henry@example.com", "Henry Adams", "h3nrySafePass", List.of(Role.STUDENT), true));
-            studentRepository.save(new Student("irene@example.com", "Irene Lewis", "iren3TopPwd", List.of(Role.STUDENT), true));
             studentRepository.save(new Student("jack@example.com", "Jack Walker", "jackPwd654", List.of(Role.STUDENT), true));
             studentRepository.save(new Student("test@example.com", "Test", "test", List.of(Role.STUDENT, Role.ADMIN), true));
         };
     }
-
 }
