@@ -15,8 +15,8 @@ spring:
     init:
       mode: always
       platform: postgres
-      schema-locations: classpath:schema-postgres.sql
-      data-locations: classpath:data-postgres.sql
+#      schema-locations: classpath:need_to_delete_schema-postgres.sql
+#      data-locations: classpath:need_to_delete_data-postgres.sql
 
 logging:
   level:

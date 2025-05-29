@@ -5,26 +5,21 @@ CREATE USER admin WITH PASSWORD 'admin';
 CREATE DATABASE students_db OWNER admin;
 -- Step 3: Grant all privileges on the database to admin (usually done by ownership)
 GRANT ALL PRIVILEGES ON DATABASE students_db TO admin;
-
-
-
-
-
+-- Step 4: Check tables
 SELECT email, "name", "password", active
 FROM public.students;
-SELECT email, roles
-FROM public.student_roles;
+-- Step 5: Export Database students_db
+courses\students>"C:\Program Files\PostgreSQL\15\bin\pg_dump.exe" -U admin -W -d students_db -F p -f students_db.sql
+-- Step 6: Create a Dockerfile
+        FROM postgres:15
 
-Step 1: Export Database students_db
-"C:\Program Files\PostgreSQL\15\bin\pg_dump.exe" -U postgres -W -d students_db -F p -f students_db.sql
-Пароль:
-E:\A\2025_04_SpringBoot\courses\students>
+        ENV POSTGRES_USER=admin
+        ENV POSTGRES_PASSWORD=admin
+        ENV POSTGRES_DB=students_db
 
-Step 2: Create a Dockerfile
-FROM postgres:15
+        COPY students_db.sql /docker-entrypoint-initdb.d/
+-- Step 7. Build and Run the Docker Container
+docker build -t pg-students_db .
+docker run -d --name students-container -p 5432:5432 pg-students_db
 
-ENV POSTGRES_USER=admin
-ENV POSTGRES_PASSWORD=admin123
-ENV POSTGRES_DB=students_db
 
-COPY students_db.sql /docker-entrypoint-initdb.d/
