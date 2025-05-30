@@ -10,6 +10,7 @@ SELECT email, "name", "password", active
 FROM public.students;
 -- Step 5: Export Database students_db
 courses\students>"C:\Program Files\PostgreSQL\15\bin\pg_dump.exe" -U admin -W -d students_db -F p -f students_db.sql
+         password: admin (using from application-postgres.yaml: datasource:    username: admin    password: admin
 -- Step 6: Create a Dockerfile
         FROM postgres:15
 
@@ -20,6 +21,30 @@ courses\students>"C:\Program Files\PostgreSQL\15\bin\pg_dump.exe" -U admin -W -d
         COPY students_db.sql /docker-entrypoint-initdb.d/
 -- Step 7. Build and Run the Docker Container
 docker build -t pg-students_db .
+   -- if docker exists:
+   -- to do -> docker rm students-container
+
+   -- if error: E:\A\2025_04_SpringBoot\courses\students>docker run -d --name students-container -p 5432:5432 pg-students_db e392de128f36319f98b352b633a0343c0ed53b9d9e68790d4c970e3e15284ae6
+   -- docker: Error response from daemon: failed to set up container networking: driver failed programming external connectivity on endpoint students-container (97ec417f4b891130606bd827b773ad1bc53424f0db27e9aef2e4c0f5d4975ee6):
+   -- Bind for 0.0.0.0:5432 failed: port is already allocated
+   -- to do -> docker ps
+   --          docker stop <container_id>  (docker stop 010e85139071)
+   --          E:\A\2025_04_SpringBoot\courses\students>docker run -d --name students-container -p 5432:5432 pg-students_db
+               docker: Error response from daemon: Conflict. The container name "/students-container" is already in use by container "e392de128f36319f98b352b633a0343c0ed53b9d9e68790d4c970e3e15284ae6". You have to remove (or rename) that container to be able to reuse that name.
+               E:\A\2025_04_SpringBoot\courses\students>docker rm students-container
+               students-container
+               E:\A\2025_04_SpringBoot\courses\students>docker run -d --name students-container -p 5432:5432 pg-students_db
+               69f7b55078f1e2f77ec30077682fc5ea6e69730519f9f3bdf856f5ebd50979b9
 docker run -d --name students-container -p 5432:5432 pg-students_db
+
+-- Step 8. add the name for image (for using in dockerHub)
+docker tag dcr olehpi/pg-students_db
+
+# 6 push docker into dockerhub (in a cloud)
+docker push olehpi/pg-students_db
+            or (docker pull olehpi/pg-students_db:latest)
+
+
+
 
 

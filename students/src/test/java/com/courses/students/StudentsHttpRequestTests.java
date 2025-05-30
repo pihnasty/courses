@@ -13,20 +13,24 @@ import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+
 import java.util.List;
 
 
 @Import({StudentsSecurityConfig.class, StudentConfig.class})
+@ActiveProfiles("h2-test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class StudentsHttpRequestTests {
 
+    @SuppressWarnings("FieldMayBeFinal")
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Test
     public void indexPageShouldReturnHeaderOneContentTest() {
         var html = this.restTemplate
-                .withBasicAuth(TestConstants.TEST_EMAIL, TestConstants.TEST_PASSWORD)
+                .withBasicAuth(TestConstants.TEST_EMAIL, TestConstants.TEST_PASSWORD_NO_ENCRYPT)
                 .getForObject("/", String.class);
         assertThat(html).contains("Students Rest Application");
     }
@@ -34,7 +38,7 @@ public class StudentsHttpRequestTests {
     @Test
     public void studentsEndPointShouldReturnCollectionWithTwoStudents() {
         var response = this.restTemplate
-                .withBasicAuth(TestConstants.TEST_EMAIL, TestConstants.TEST_PASSWORD)
+                .withBasicAuth(TestConstants.TEST_EMAIL, TestConstants.TEST_PASSWORD_NO_ENCRYPT)
                 .getForObject(TestConstants.STUDENTS_ENDPOINT, Collection.class);
         assertThat(response.size()).isGreaterThan(1);
     }
@@ -50,7 +54,7 @@ public class StudentsHttpRequestTests {
                 List.of(Role.STUDENT),
                 true);
         var response =  this.restTemplate
-                .withBasicAuth(TestConstants.TEST_EMAIL, TestConstants.TEST_PASSWORD)
+                .withBasicAuth(TestConstants.TEST_EMAIL, TestConstants.TEST_PASSWORD_NO_ENCRYPT)
                 .postForObject(TestConstants.STUDENTS_ENDPOINT,newStudent, Student.class);
 
         assertThat(response).isNotNull();
@@ -67,17 +71,17 @@ public class StudentsHttpRequestTests {
         var size = initialStudents.size();
 
         this.restTemplate
-                .withBasicAuth(TestConstants.ADMIN_EMAIL, TestConstants.ADMIN_PASSWORD)
+                .withBasicAuth(TestConstants.ADMIN_EMAIL, TestConstants.ADMIN_NO_PASSWORD)
                 .delete(TestConstants.STUDENTS_ENDPOINT + "/" + TestConstants.TEST_DELETING_EMAIL);
 
         var students = getStudents();
-        assertThat(students.size()).isLessThanOrEqualTo(size-1);
+      assertThat(students.size()).isLessThanOrEqualTo(size-1);
     }
 
     @Test
     public void studentsEndPointFindStudentShouldReturnStudent() {
         var student = this.restTemplate
-                .withBasicAuth(TestConstants.ADMIN_EMAIL, TestConstants.ADMIN_PASSWORD)
+                .withBasicAuth(TestConstants.ADMIN_EMAIL, TestConstants.ADMIN_NO_PASSWORD)
                 .getForObject(TestConstants.STUDENTS_ENDPOINT + "/" + TestConstants.TEST_EMAIL,Student.class);
 
         assertThat(student).isNotNull();
@@ -86,7 +90,7 @@ public class StudentsHttpRequestTests {
 
     private Collection getStudents() {
         return this.restTemplate
-                .withBasicAuth(TestConstants.ADMIN_EMAIL, TestConstants.ADMIN_PASSWORD)
+                .withBasicAuth(TestConstants.ADMIN_EMAIL, TestConstants.ADMIN_NO_PASSWORD)
                 .getForObject(TestConstants.STUDENTS_ENDPOINT, Collection.class);
     }
 }

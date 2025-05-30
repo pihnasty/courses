@@ -1,7 +1,7 @@
 version: "3"
 services:
   postgres:
-    image: postgres
+    image: olehpi/pg-students_db  #  Use custom image
     restart: always
     environment:
       POSTGRES_USER: admin

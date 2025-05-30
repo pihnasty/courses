@@ -1,6 +1,7 @@
 spring:
   profiles:
-#    active: memory
-#    active: h2
-#    active: h2-test
-    active: postgres
+    active:
+#      memory
+#      h2
+#      h2-test
+      postgres

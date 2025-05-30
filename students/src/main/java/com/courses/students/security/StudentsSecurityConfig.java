@@ -1,22 +1,28 @@
 package com.courses.students.security;
 
-import com.courses.students.model.Role;
+import com.courses.students.repository.StudentRepository;
+import com.courses.students.service.StudentDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class StudentsSecurityConfig {
+
+    private final StudentRepository studentRepository;
+
+    public StudentsSecurityConfig(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -43,27 +49,27 @@ public class StudentsSecurityConfig {
     }
 
     @Bean
-    UserDetailsManager userDetailsManager(PasswordEncoder passwordEncoder) {
-        UserDetails admin = User.builder()
-                .username("admin@example.com")
-                .password(passwordEncoder.encode("admin"))
-                .roles(Role.ADMIN.name(), Role.TEACHER.name(), Role.STUDENT.name())
-                .build();
-        UserDetails teacher = User.builder()
-                .username("test@example.com")
-                .password(passwordEncoder.encode("test"))
-                .roles(Role.TEACHER.name())
-                .build();
-        UserDetails student = User.builder()
-                .username("student@example.com")
-                .password(passwordEncoder.encode("student"))
-                .roles(Role.STUDENT.name())
-                .build();
-        return new InMemoryUserDetailsManager(admin, teacher, student);
-    }
-
-    @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(new StudentDetailsService(studentRepository));
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+    /* Alternative option to  public AuthenticationProvider authenticationProvider()/.
+     * This method can use instead  public AuthenticationProvider authenticationProvider()
+    @Bean
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(new StudentDetailsService(studentRepository));
+        provider.setPasswordEncoder(passwordEncoder());
+        return new ProviderManager(provider);
+    }
+    */
+
 }
