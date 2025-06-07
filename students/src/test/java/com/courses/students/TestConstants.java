@@ -13,9 +13,9 @@ public class TestConstants {
     static final String STUDENTS_ENDPOINT = "/students";
     static final String NEW_STUDENTS_CONTENT = """
              {
-                 "email": "newtest5@example.com",
-                 "name": "Newtest",
-                 "password": "createdNewStudent",
+                 "email": "test@example.com",
+                 "name": "Test",
+                 "password": "test",
                  "userRole": ["STUDENT"],
                  "active": true
              }

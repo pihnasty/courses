@@ -42,5 +42,4 @@ public class StudentMockMvcWithoutMockUserTests {
                         .content(TestConstants.NEW_STUDENTS_CONTENT))
                 .andExpect(status().isCreated());
     }
-
 }
