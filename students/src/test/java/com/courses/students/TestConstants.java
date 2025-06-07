@@ -11,4 +11,13 @@ public class TestConstants {
     static final String TEST_PASSWORD_NO_ENCRYPT = "test"; //"$2a$10$HOG57Cxoc/E.d8U7upmsAuprEAREQu8W9tDVdcBGH6wha/TFSXqRS"
     static final String TEST_DELETING_EMAIL = "test_deleting@example.com";
     static final String STUDENTS_ENDPOINT = "/students";
+    static final String NEW_STUDENTS_CONTENT = """
+             {
+                 "email": "newtest5@example.com",
+                 "name": "Newtest",
+                 "password": "createdNewStudent",
+                 "userRole": ["STUDENT"],
+                 "active": true
+             }
+            """;
 }
