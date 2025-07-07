@@ -22,8 +22,8 @@ jobs:
 
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
-        working-directory: courses/students
+        working-directory: students
 
       - name: Build with Gradle
         run: ./gradlew build --stacktrace
-        working-directory: courses/students
+        working-directory: students
